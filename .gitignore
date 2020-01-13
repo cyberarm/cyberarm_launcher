@@ -1,6 +1,6 @@
 data/*
-!data/.cache
+!data/cache
 !data/.gitkeep
 
-data/.cache/*
-!data/.cache/.gitkeep
+data/cache/*
+!data/cache/.gitkeep
