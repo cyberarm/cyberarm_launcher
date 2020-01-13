@@ -1,0 +1,8 @@
+application:
+  id: c417e8d9-cc48-4a2e-8860-503bc5b2a953
+  type: game
+  name: I-MIC FPS
+  repo: cyberarm/i-mic-fps
+  provider: github
+  uses_core: cyberarm_engine_with_opengl
+  platform: all

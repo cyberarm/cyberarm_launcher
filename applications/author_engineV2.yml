@@ -1,0 +1,8 @@
+application:
+  id: 4505df9c-2577-473f-bdbd-9a2a28ede173
+  type: tool
+  name: AuthorEngine
+  repo: cyberarm/author_engineV2
+  provider: github
+  uses_core: gosu
+  platform: all

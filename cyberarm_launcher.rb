@@ -8,12 +8,15 @@ end
 require "bundler"
 Bundler.setup(:default)
 
-require "excon"
 require "socket"
 require "yaml"
 require "json"
 require "base64"
 require "logger"
+require "time"
+
+require "excon"
+require "os"
 
 begin
   require_relative "../"

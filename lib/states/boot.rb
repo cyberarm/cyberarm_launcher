@@ -20,7 +20,7 @@ module CyberarmLauncher
       @logo_position = @x - @width / 2 + @logo.width / 2
       @text_position = @x - @width / 2 + @logo.width + @padding
 
-      @timer = CyberarmEngine::Timer.new(1_000) do
+      @timer = CyberarmEngine::Timer.new(750) do
         push_state(IntroState)
       end
 
@@ -28,7 +28,10 @@ module CyberarmLauncher
         Dir.glob("#{APPLICATIONS_PATH}/*.yml").each do |file|
           app = Application.new(file)
 
-          worker.backend.applications << app if app.valid?
+          if app.valid?
+            raise "#{app.name} can't share an id with another project!" if worker.backend.applications.find { |a| a.id == app.id }
+            worker.backend.applications << app
+          end
         end
       end
     end

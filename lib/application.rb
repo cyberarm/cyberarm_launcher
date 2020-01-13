@@ -1,10 +1,11 @@
 module CyberarmLauncher
   class Application
-    attr_reader :readme
+    attr_reader :readme, :repo_data
     def initialize(application_file)
       @data = YAML.load_file(application_file)
       @valid = false
       @readme = {}
+      @repo_data = {}
 
       validate!
 
@@ -16,6 +17,7 @@ module CyberarmLauncher
           end
         end
 
+        populate_repo_data
         populate_readme_data
       else
         pp @data
@@ -25,14 +27,16 @@ module CyberarmLauncher
     def validate!
       @valid = assert_has_nonblank("application") &&
                assert_has_nonblank("application", "id") &&
+               assert_has_nonblank("application", "type") &&
                assert_has_nonblank("application", "name") &&
                assert_has_nonblank("application", "repo") &&
                assert_has_nonblank("application", "provider") &&
-               assert_has_nonblank("application", "uses_core")
+               assert_has_nonblank("application", "uses_core") &&
+               assert_has_nonblank("application", "platform")
     end
 
     def assert_has_nonblank(*keys)
-      @data.dig(*keys) != nil
+      @data.dig(*keys) != nil && @data.dig(*keys).to_s.length > 0
     end
 
     def valid?
@@ -47,6 +51,8 @@ module CyberarmLauncher
 
         if @request.status.between?(200, 299)
           Cache.store(@data["application"]["id"], "provider_api", "readme.json", @request.body)
+
+          data = @request.body
         end
       else
         data = Cache.retrieve(@data["application"]["id"], "provider_api", "readme.json")
@@ -61,6 +67,23 @@ module CyberarmLauncher
 
         i += 1
       end
+    end
+
+    def populate_repo_data
+      data = ""
+      if Cache.expired?(@data["application"]["id"], "provider_api", "repo.json")
+        # Assuming github
+        @request = Excon.get("https://api.github.com/repos/#{@data["application"]["repo"]}")
+
+        if @request.status.between?(200, 299)
+          Cache.store(@data["application"]["id"], "provider_api", "repo.json", @request.body)
+          data = @request.body
+        end
+      else
+        data = Cache.retrieve(@data["application"]["id"], "provider_api", "repo.json")
+      end
+
+      @repo_data = JSON.parse(data, symbolize_names: true)
     end
   end
 end

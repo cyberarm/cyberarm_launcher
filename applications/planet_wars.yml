@@ -5,4 +5,5 @@ application:
   repo: cyberarm/planet-wars
   provider: github
   uses_core: gosu
+  platform: all
   # uses_core: gosu, cyberarm_engine, cyberarm_engine_with_opengl, gosu_with_opengl

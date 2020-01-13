@@ -1,0 +1,8 @@
+application:
+  id: 09ded0ca-2225-413b-86c8-0bc660a3c54b
+  type: game
+  name: I-MIC RTS
+  repo: cyberarm/i-mic-rts
+  provider: github
+  uses_core: cyberarm_engine
+  platform: all

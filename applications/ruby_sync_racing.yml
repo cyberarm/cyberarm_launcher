@@ -5,3 +5,4 @@ application:
   repo: cyberarm/ruby_sync_racing
   provider: github
   uses_core: gosu
+  platform: all

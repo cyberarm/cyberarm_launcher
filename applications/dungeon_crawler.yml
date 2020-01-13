@@ -1,0 +1,8 @@
+application:
+  id: 3b34ba8d-7b67-4653-996a-6046d48d3879
+  type: game
+  name: Dungeon Crawler
+  repo: cyberarm/dungeon_crawler
+  provider: github
+  uses_core: gosu_with_opengl
+  platform: all

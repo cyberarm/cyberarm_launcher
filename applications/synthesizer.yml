@@ -1,0 +1,8 @@
+application:
+  id: ae353ca2-ea40-4c62-8bd6-58d6b6e9f831
+  type: tool
+  name: Synthesizer
+  repo: cyberarm/synthesizer
+  provider: github
+  uses_core: gosu
+  platform: linux
