@@ -1,3 +1,10 @@
+if ARGV.join.include?("uid")
+  require "securerandom"
+
+  puts SecureRandom.uuid
+  exit
+end
+
 require "bundler"
 Bundler.setup(:default)
 

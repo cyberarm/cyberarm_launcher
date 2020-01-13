@@ -22,16 +22,15 @@ module CyberarmLauncher
       stack(height: 1.0, width: 1.0, margin_top: 5) do
         flow(width: 1.0, height: 1.0) do
           # SIDEBAR
-          @sidebar = stack(width: 0.24, height: 1.0, margin_right: 2, border_color: [@sidebar_border_color, @sidebar_border_color, 0, 0], border_thickness: 2) do
-            label("Sidebar", text_size: @caption_size)
-
+          @sidebar = stack(width: 0.24, height: 1.0, margin_right: 2, padding: 10, border_color: [@sidebar_border_color, @sidebar_border_color, 0, 0], border_thickness: 2) do
             button("Home", width: 1.0) do
               page_home
             end
 
             label ""
+            label "Games", font_size: @caption_size
 
-            window.backend.applications.sort {|a| a.name }.each do |application|
+            window.backend.applications.sort_by {|a| a.name }.each do |application|
               button(application.name, width: 1.0) do
                 page_application(application)
               end
@@ -41,7 +40,6 @@ module CyberarmLauncher
           # CONTENT
           @content = stack(width: 0.74, height: 1.0, padding: 10) do
             background 0xff552200
-            label "0"
           end
         end
       end

@@ -1,0 +1,7 @@
+application:
+  id: c46a6a2b-f287-4587-904a-00d4053c5861
+  type: game
+  name: Ruby Sync Racing
+  repo: cyberarm/ruby_sync_racing
+  provider: github
+  uses_core: gosu
