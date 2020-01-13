@@ -1,0 +1,8 @@
+application:
+  id: d62c3651-544d-4f6a-bca5-49494c2470fe
+  type: game
+  name: Tic-Tac-Toe
+  repo: cyberarm/tictactoe
+  provider: github
+  uses_core: gosu
+  platform: all

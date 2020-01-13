@@ -53,6 +53,11 @@ module CyberarmLauncher
           Cache.store(@data["application"]["id"], "provider_api", "readme.json", @request.body)
 
           data = @request.body
+        elsif @request.status == 404
+          log.warn "#{@data["application"]["name"]} has no README available!"
+          data = "{\"content\":\"\"}"
+        else
+          raise "ERROR: #{@request.status}"
         end
       else
         data = Cache.retrieve(@data["application"]["id"], "provider_api", "readme.json")

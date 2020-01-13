@@ -1,0 +1,8 @@
+application:
+  id: 87454865-a6c1-416a-9e80-f50dbdd8d520
+  type: game
+  name: War of the Squares
+  repo: cyberarm/war_of_the_squares
+  provider: github
+  uses_core: gosu
+  platform: all

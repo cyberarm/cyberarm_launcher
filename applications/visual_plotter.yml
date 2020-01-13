@@ -1,0 +1,8 @@
+application:
+  id: a2691f00-b35d-4e29-b86c-97c4062fccbe
+  type: tool
+  name: Visual Plotter
+  repo: cyberarm/visual_plotter
+  provider: github
+  uses_core: gosu
+  platform: all

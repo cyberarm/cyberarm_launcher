@@ -1,0 +1,8 @@
+application:
+  id: e9137df8-71cc-4e8f-ab2b-719115723e23
+  type: game
+  name: CitySim
+  repo: cyberarm/citysim
+  provider: github
+  uses_core: cyberarm_engine
+  platform: all

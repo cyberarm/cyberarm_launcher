@@ -1,0 +1,8 @@
+application:
+  id: a9e348df-337a-4578-ac0c-164655cb9f6d
+  type: tool
+  name: Polygonal Background Generator
+  repo: cyberarm/polygonal_background_generator
+  provider: github
+  uses_core: gosu
+  platform: all

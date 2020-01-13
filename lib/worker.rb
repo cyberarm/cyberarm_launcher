@@ -7,6 +7,7 @@ module CyberarmLauncher
 
       @block = block
 
+      @born_at = Gosu.milliseconds
       @last_run = 0
       @done = false
     end
@@ -21,8 +22,16 @@ module CyberarmLauncher
       end
     end
 
+    def life_time
+      Gosu.milliseconds - @born_at
+    end
+
     def done?
       @done
+    end
+
+    def done!
+      @done = true
     end
   end
 end

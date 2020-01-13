@@ -1,0 +1,8 @@
+application:
+  id: 7803d615-c7a6-447f-9be2-25e9971c30cc
+  type: game
+  name: Breakout
+  repo: cyberarm/breakout
+  provider: github
+  uses_core: cyberarm_engine
+  platform: all

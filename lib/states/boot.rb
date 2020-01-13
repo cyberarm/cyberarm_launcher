@@ -1,13 +1,15 @@
 module CyberarmLauncher
   class BootState < CyberarmEngine::GameState
     def setup
+      application_specs = Dir.glob("#{APPLICATIONS_PATH}/*.yml")
+
       @logo = Gosu::Image.new("#{ASSETS_PATH}/avatar.png")
       @font = Gosu::Font.new(72, name: "Impact", bold: true) # "Droid Sans"
       @small_font = Gosu::Font.new(28, name: "Bitstream Vera Sans Mono")
 
       @text = NAME.upcase
       @version_text = "v#{VERSION}"
-      @tagline_text = "#{@version_text} — Supports #{rand(0..99)} apps and games"
+      @tagline_text = "#{@version_text} — Supports #{application_specs.size} apps and games"
       @text_width = @font.text_width(@text)
       @text_width = @font.text_width(@text)
 
@@ -24,14 +26,18 @@ module CyberarmLauncher
         push_state(IntroState)
       end
 
-      window.add_worker do |worker|
-        Dir.glob("#{APPLICATIONS_PATH}/*.yml").each do |file|
-          app = Application.new(file)
+      window.add_worker(100) do |worker|
+        if worker.life_time >= 100
+          application_specs.each do |file|
+            app = Application.new(file)
 
-          if app.valid?
-            raise "#{app.name} can't share an id with another project!" if worker.backend.applications.find { |a| a.id == app.id }
-            worker.backend.applications << app
+            if app.valid?
+              raise "#{app.name} can't share an id with another project!" if worker.backend.applications.find { |a| a.id == app.id }
+              worker.backend.applications << app
+            end
           end
+
+          worker.done!
         end
       end
     end

@@ -1,0 +1,8 @@
+application:
+  id: 2c733c92-b366-4aff-9fdb-a48ff96e3561
+  type: tool
+  name: FTC Field Measuring Tool
+  repo: cyberarm/ftc_field_measuring_tool
+  provider: github
+  uses_core: gosu
+  platform: all

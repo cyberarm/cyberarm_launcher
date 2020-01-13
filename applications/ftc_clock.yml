@@ -1,0 +1,8 @@
+application:
+  id: 5b83ed77-eb85-42a2-80e1-cc78e5f531e8
+  type: tool
+  name: FTC Clock
+  repo: cyberarm/ftc_clock
+  provider: github
+  uses_core: gosu
+  platform: all
