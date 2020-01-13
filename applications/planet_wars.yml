@@ -1,0 +1,8 @@
+application:
+  id: bb29fa6f-ce0e-44a0-b0db-512b587b2a7a
+  type: game
+  name: Planet Wars
+  repo: cyberarm/planet-wars
+  provider: github
+  uses_core: gosu
+  # uses_core: gosu, cyberarm_engine, cyberarm_engine_with_opengl, gosu_with_opengl
