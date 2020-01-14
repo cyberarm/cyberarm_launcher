@@ -43,6 +43,14 @@ module CyberarmLauncher
       @valid
     end
 
+    def repo_size
+      if repo_data[:size] < 1_000
+        "#{repo_data[:size]} KB"
+      elsif repo_data[:size] < 100_000
+        "#{(repo_data[:size] / 1_000.0).round(2)} MB"
+      end
+    end
+
     def populate_readme_data
       data = ""
       if Cache.expired?(@data["application"]["id"], "provider_api", "readme.json")

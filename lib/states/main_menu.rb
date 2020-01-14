@@ -34,8 +34,7 @@ module CyberarmLauncher
       stack(height: 1.0, width: 1.0, margin_top: 5) do
         flow(width: 1.0, height: 1.0) do
           # SIDEBAR
-          @sidebar = stack(width: 0.24, height: 1.0, margin_right: 2, padding: 10, border_color: [@sidebar_border_color, @sidebar_border_color, 0, 0], border_thickness: 2) do |element|
-            refresh_sidebar(element)
+          @sidebar = stack(width: 0.24, height: 1.0, margin_right: 2, padding: 10, border_color: [@sidebar_border_color, @sidebar_border_color, 0, 0], border_thickness: 2) do
           end
 
           # CONTENT
@@ -45,20 +44,21 @@ module CyberarmLauncher
         end
       end
 
+      refresh_sidebar
       page_home
     end
 
-    def refresh_sidebar(element = @sidebar)
-      element.clear do |bar|
-        element.button("Home", width: 1.0) do
+    def refresh_sidebar
+      @sidebar.clear do
+        button("Home", width: 1.0) do
           page_home
         end
 
-        element.label ""
-        element.label "#{@show_only.capitalize}s", text_size: @caption_size
+        label ""
+        label "#{@show_only.capitalize}s", text_size: @caption_size
 
         window.backend.applications.reject { |a| a.type != @show_only }.sort_by {|a| a.name }.each do |application|
-          element.button(application.name, width: 1.0) do
+          button(application.name, width: 1.0) do
             page_application(application)
           end
         end
@@ -66,38 +66,44 @@ module CyberarmLauncher
     end
 
     def page_home
-      @content.clear do |element|
-        element.image("#{ASSETS_PATH}/avatar.png", margin_bottom: 10)
-        element.label(NAME.upcase, text_size: @header_size, font: "Impact")
-        element.label(DESCRIPTION, text_size: @font_size, font: "Consolas")
+      @content.clear do
+        flow do
+          image("#{ASSETS_PATH}/avatar.png", margin_bottom: 10)
+          stack(margin_left: 10) do |se|
+            label(NAME.upcase, text_size: @header_size, font: "Impact")
+            label(DESCRIPTION, text_size: @font_size, font: "Consolas")
+          end
+        end
       end
     end
 
     def page_application(app)
-      @content.clear do |element|
-        element.label "#{app.name}", text_size: @header_size
-        element.label "#{app.repo_data[:description]}", text_size: @caption_size
+      @content.clear do
+        label "#{app.name}", text_size: @header_size
+        label "#{app.repo_data[:description]}", text_size: @caption_size
 
-        element.label("#{app.type.capitalize} last updated: #{Time.parse(app.repo_data[:pushed_at]).strftime("%B %e, %Y")}", text_size: @footer_size)
-        element.label ""
+        label("#{app.type.capitalize} last updated: #{Time.parse(app.repo_data[:pushed_at]).strftime("%B %e, %Y")}", text_size: @footer_size)
+        label ""
         if app.platform == "all" or OS.host_os.include?(app.platform)
           # TODO: Add support for adding Containers in clears
-          # element.flow do
-          element.button "Install"
-          element.label " - N MB - Uses #{app.uses_core.split("_").join("+")} core"
-          # end
+          flow do
+            button "Install"
+            label "#{app.repo_size} - Uses #{app.uses_core.split("_").join("+")} core", margin_left: 4
+          end
+
+          label "Note: Size shown is size of repo, download may be smaller.", text_size: @footer_size
         end
 
         if app.platform != "all" and not OS.host_os.include?(app.platform)
-          element.label "<c=f30>Compatible with #{app.platform.capitalize} only</c>"
+          label "<c=f30>Compatible with #{app.platform.capitalize} only</c>"
         end
-        element.label ""
+        label ""
 
         app.readme.each do |id, el|
           if el.is_a?(String)
-            element.label(format_simplified_markdown(el))
+            label(format_simplified_markdown(el))
           elsif el.is_a?(Gosu::Image)
-            element.image el
+            image el
           end
         end
       end
@@ -105,9 +111,9 @@ module CyberarmLauncher
 
     def format_simplified_markdown(string)
       if string.start_with?("#")
-        string.gsub!("#", "")
+        _string = string.gsub("#", "")
 
-        "<b>#{string.strip}</b>"
+        "<b>#{_string.strip}</b>"
 
       else
         string.strip
