@@ -32,7 +32,12 @@ module CyberarmLauncher
             app = Application.new(file)
 
             if app.valid?
-              raise "#{app.name} can't share an id with another project!" if worker.backend.applications.find { |a| a.id == app.id }
+              worker.backend.applications.each do |a|
+                if a.id == app.id
+                  raise "\"#{app.name}\" can't share an id with \"#{a.name}\"!"
+                end
+              end
+
               worker.backend.applications << app
             end
           end
