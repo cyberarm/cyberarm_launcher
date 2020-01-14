@@ -8,6 +8,9 @@ module CyberarmLauncher
       @filename = filename
 
       @chunks = []
+      @done = false
+
+      log.info "Created Downloader for: #{id}, url: #{url}, data type: #{data_type}, filename: #{filename}"
     end
 
     def start
@@ -19,6 +22,8 @@ module CyberarmLauncher
 
       Cache.store(@id, @data_type, @filename, @chunks.join)
 
+      log.info "Download for: #{id} completed"
+      @done = true
       done!
     end
 
@@ -41,8 +46,16 @@ module CyberarmLauncher
       done!
     end
 
+    def status
+      "#{progress * 100}%"
+    end
+
     def done!
-      $window.backend.downloads.delete_if { |d| d == self }
+      $window.backend.downloaders.delete_if { |d| d == self }
+    end
+
+    def done?
+      @done
     end
   end
 end

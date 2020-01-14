@@ -56,6 +56,10 @@ module CyberarmLauncher
       "https://api.github.com/repos/#{@data["application"]["repo"]}/zipball"
     end
 
+    def installed?
+      false
+    end
+
     def populate_readme_data
       data = ""
       if Cache.expired?(@data["application"]["id"], "provider_api", "readme.json")

@@ -10,6 +10,11 @@ module CyberarmLauncher
 
       @sidebar_border_color = Gosu::Color.rgb(0, 0, 0)
       @show_only = "game"
+      @current_app = nil
+
+      @current_app_installation_info = nil
+      @current_app_installation_info_progress = nil
+      @current_app_installation_info_status = nil
 
       # HEADER
       stack(width: 1.0) do
@@ -46,6 +51,41 @@ module CyberarmLauncher
 
       refresh_sidebar
       page_home
+
+      window.add_worker(30) do |worker|
+        worker.data[:active_app_id] ||= nil
+        worker.data[:active_app_status] ||= nil
+
+        if @current_app && worker.data.dig(:active_app_id) && worker.data.dig(:active_app_status) != current_app_status
+          worker.data[:active_app_status] = current_app_status
+
+          @current_app_installation_info.clear do
+            app_installation_state(@current_app)
+          end
+        elsif @current_app && worker.data.dig(:active_app_id) != @current_app.id
+          worker.data[:active_app_id] = @current_app.id
+
+          @current_app_installation_info.clear do
+            app_installation_state(@current_app)
+          end
+        end
+
+        if app = @current_app # @current_app not nil? then set app equal to current app
+          if app.installed?
+
+          elsif app_installing?(app.id) && controller = app_controller(app.id)
+            if @current_app_installation_info_status
+              @current_app_installation_info_status.value = controller.status
+              @current_app_installation_info_progress.value = controller.progress
+            end
+
+          elsif app_downloading?(app.id) && controller = app_controller(app.id)
+            if @current_app_installation_info_progress
+              @current_app_installation_info_progress.value = controller.progress
+            end
+          end
+        end
+      end
     end
 
     def refresh_sidebar
@@ -59,13 +99,15 @@ module CyberarmLauncher
 
         window.backend.applications.reject { |a| a.type != @show_only }.sort_by {|a| a.name }.each do |application|
           button(application.name, width: 1.0) do
-            page_application(application)
+            @current_app = application
+            page_application
           end
         end
       end
     end
 
     def page_home
+      @current_app = nil
       @content.clear do
         flow do
           image("#{ASSETS_PATH}/avatar.png", margin_bottom: 10)
@@ -77,7 +119,7 @@ module CyberarmLauncher
       end
     end
 
-    def page_application(app)
+    def page_application(app = @current_app)
       @content.clear do
         label "#{app.name}", text_size: @header_size
         label "#{app.repo_data[:description]}", text_size: @caption_size
@@ -85,34 +127,7 @@ module CyberarmLauncher
         label("#{app.type.capitalize} last updated: #{Time.parse(app.repo_data[:pushed_at]).strftime("%B %e, %Y")}", text_size: @footer_size)
         label ""
         if app.platform == "all" or OS.host_os.include?(app.platform)
-          # TODO: Add support for adding Containers in clears
-          flow do |_flow|
-            button "Install" do
-              _flow.clear do
-                _downloader = window.backend.create_downloader(app.id, app.package_url, "archive", "master.zip")
-                _progress = progress
-
-                window.add_worker(50) do |worker|
-                  unless window.backend.get_downloader(_downloader.id)
-                    worker.done!
-                    _flow.clear do
-                      label "<c=ff0>Installing...</c>"
-                      window.add_worker do |installer|
-                      end
-                    end
-
-                  else
-                    _progress.value = _downloader.progress
-                  end
-                end
-
-                button "Cancel" do
-                  puts "TODO"
-                end
-              end
-            end
-
-            label "#{app.repo_size} - Uses #{app.uses_core.split("_").join("+")} core", margin_left: 4
+          @current_app_installation_info = flow do
           end
 
           label "Note: Size shown is size of repo, download may be smaller.", text_size: @footer_size
@@ -131,6 +146,65 @@ module CyberarmLauncher
             image el
           end
         end
+      end
+
+      app_installation_state(app)
+    end
+
+    def app_installation_state(app, container = @current_app_installation_info)
+      if app.installed?
+        button "Play"
+        button "Uninstall"
+
+      elsif app_installing?(app.id)
+        button "Cancel" do
+          if _installer = app_installing?(app.id)
+            _installer.cancel
+          end
+        end
+        @current_app_installation_info_progress = progress
+        label "<c=f50>Installing:</c> "
+        @current_app_installation_info_status = label ""
+
+
+      elsif app_downloading?(app.id)
+        button "Cancel"
+        @current_app_installation_info_progress = progress
+        label "#{app.repo_size} - Uses #{app.uses_core.split("_").join("+")} core", margin_left: 4
+
+      elsif false#app_downloaded?(app.id)
+        button "Install" do
+        end
+
+      else
+        button "Download and Install" do
+          _downloader = window.backend.create_downloader(app.id, app.package_url, "archive", "master.zip")
+          _installer = window.backend.create_installer(app.id, "archive", "master.zip")
+
+          window.backend.create_controller(app.id, _downloader, _installer)
+        end
+
+        label "#{app.repo_size} - Uses #{app.uses_core.split("_").join("+")} core", margin_left: 4
+      end
+    end
+
+    def app_installing?(id)
+      window.backend.data.dig(id, :status) == :installing
+    end
+
+    def app_downloading?(id)
+      window.backend.data.dig(id, :status) == :downloading
+    end
+
+    def app_controller(id)
+      window.backend.get_controller(id)
+    end
+
+    def current_app_status
+      if @current_app
+        window.backend.data.dig(@current_app.id, :status)
+      else
+        :none
       end
     end
 

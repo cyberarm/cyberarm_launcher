@@ -17,6 +17,7 @@ require "time"
 
 require "excon"
 require "os"
+require "zip"
 
 begin
   require_relative "../"

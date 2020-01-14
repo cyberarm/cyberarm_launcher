@@ -38,6 +38,10 @@ module CyberarmLauncher
                 end
               end
 
+              # This is used by MainMenu to decide whether to update app's installation information
+              worker.backend.data[app.id] = {}
+              worker.backend.data[app.id][:status] = :none
+
               worker.backend.applications << app
             end
           end

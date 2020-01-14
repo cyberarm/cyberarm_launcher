@@ -17,6 +17,16 @@ module CyberarmLauncher
       end
     end
 
+    def self.path(application_id, data_type, name)
+      path = "#{CACHE_PATH}/#{application_id}/#{data_type}"
+
+      if File.exist?("#{path}/#{name}")
+        return "#{path}/#{name}"
+      else
+        return nil
+      end
+    end
+
     def self.expired?(application_id, data_type, name, max_age = 60*60) # seconds
       path = "#{CACHE_PATH}/#{application_id}/#{data_type}"
 

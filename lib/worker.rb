@@ -1,6 +1,6 @@
 module CyberarmLauncher
   class Worker
-    attr_reader :backend, :freqency
+    attr_reader :backend, :freqency, :data
     def initialize(backend, freqency, &block)
       @backend = backend
       @freqency = freqency
@@ -10,6 +10,7 @@ module CyberarmLauncher
       @born_at = Gosu.milliseconds
       @last_run = 0
       @done = false
+      @data = {}
     end
 
     def update
