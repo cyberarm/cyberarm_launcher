@@ -86,13 +86,38 @@ module CyberarmLauncher
         label ""
         if app.platform == "all" or OS.host_os.include?(app.platform)
           # TODO: Add support for adding Containers in clears
-          flow do
-            button "Install"
+          flow do |_flow|
+            button "Install" do
+              _flow.clear do
+                _downloader = window.backend.create_downloader(app.id, app.package_url, "archive", "master.zip")
+                _progress = progress
+
+                window.add_worker(50) do |worker|
+                  unless window.backend.get_downloader(_downloader.id)
+                    worker.done!
+                    _flow.clear do
+                      label "<c=ff0>Installing...</c>"
+                      window.add_worker do |installer|
+                      end
+                    end
+
+                  else
+                    _progress.value = _downloader.progress
+                  end
+                end
+
+                button "Cancel" do
+                  puts "TODO"
+                end
+              end
+            end
+
             label "#{app.repo_size} - Uses #{app.uses_core.split("_").join("+")} core", margin_left: 4
           end
 
           label "Note: Size shown is size of repo, download may be smaller.", text_size: @footer_size
         end
+
 
         if app.platform != "all" and not OS.host_os.include?(app.platform)
           label "<c=f30>Compatible with #{app.platform.capitalize} only</c>"

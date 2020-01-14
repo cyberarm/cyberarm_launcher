@@ -51,6 +51,11 @@ module CyberarmLauncher
       end
     end
 
+    def package_url
+      # "https://codeload.github.com/#{@data["application"]["repo"]}/zip/master"
+      "https://api.github.com/repos/#{@data["application"]["repo"]}/zipball"
+    end
+
     def populate_readme_data
       data = ""
       if Cache.expired?(@data["application"]["id"], "provider_api", "readme.json")
