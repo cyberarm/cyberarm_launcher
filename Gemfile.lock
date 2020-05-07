@@ -1,16 +1,18 @@
 PATH
   remote: ../cyberarm_engine
   specs:
-    cyberarm_engine (0.12.1)
-      gosu (~> 0.14.0)
+    cyberarm_engine (0.14.0)
+      gosu (~> 0.15.0)
+      gosu_more_drawables (~> 0.3)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    excon (0.71.1)
-    gosu (0.14.5)
+    excon (0.72.0)
+    gosu (0.15.1)
+    gosu_more_drawables (0.3.0)
     os (1.0.1)
-    rubyzip (2.0.0)
+    rubyzip (2.2.0)
 
 PLATFORMS
   ruby
@@ -22,4 +24,4 @@ DEPENDENCIES
   rubyzip
 
 BUNDLED WITH
-   2.0.2
+   2.1.4

@@ -1,5 +1,5 @@
 module CyberarmLauncher
-  class Window < CyberarmEngine::Engine
+  class Window < CyberarmEngine::Window
 
     attr_reader :backend
     def initialize
